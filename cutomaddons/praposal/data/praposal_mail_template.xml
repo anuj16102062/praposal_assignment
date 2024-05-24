@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="email_template_for_proposal" model="mail.template">
+            <field name="name">Proposal Email</field>
+            <field name="model_id" ref="model_business_proposal"/>
+            <field name="subject">Proposal: {{object.name}}</field>
+            <field name="email_from">{{object.salesman_id.partner_id.email}}</field>
+            <field name="email_to">{{object.partner_id.email}}</field>
+            <field name="body_html" type="html">
+                <p>Dear <t t-out= "object.partner_id.name or '' " />,</p>
+                <br> </br>
+                <p>We are pleased to send you our proposal:</p>
+                <p><strong>Proposal Number:</strong> <t t-out="object.name or '' "/></p>
+                <p><strong>Proposal Date:</strong> <t t-out= "object.create_date or '' "/></p>
+                <p><strong>Customer:</strong> <t t-out= "object.partner_id.name" /></p>
+                <p><strong>Salesperson:</strong> <t t-out="object.salesman_id.partner_id.name"/></p>
+                <table border="1" style="width:100%; border-collapse: collapse;">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Proposed Quantity</th>
+                            <th>Proposed Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="object.proposal_line_ids" t-as="line">
+                            <tr>
+                                <td><span t-esc="line.product_id.display_name"/></td>
+                                <td><span t-esc="line.qty_proposed"/></td>
+                                <td><span t-esc="line.price_proposed"/> ₹</td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+                <p>Total Proposed Amout: <strong> <t t-out= "object.amount_total_proposed or 0" /> ₹</strong></p>
+                <p>Please review the proposal and let us know your feedback.</p>
+                <p><a t-att-href="object.external_link">View Proposal</a></p>
+                <p>Best regards,</p>
+                <p><t t-out= "object.salesman_id.partner_id.name or '' " /></p>
+            </field>
+        </record>
+    </data>
+</odoo>

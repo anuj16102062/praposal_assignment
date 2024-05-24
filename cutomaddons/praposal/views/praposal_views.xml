@@ -1,0 +1,79 @@
+<odoo>
+    <record id="view_business_proposal_form" model="ir.ui.view">
+        <field name="name">business.proposal.form</field>
+        <field name="model">business.proposal</field>
+        <field name="arch" type="xml">
+            <form string="Business Proposal">
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,sent,confirmed,cancel"/>
+                     <button string="Send" type="object" name="action_send" class="oe_highlight" states="draft"/>
+                    <button string="Confirm" type="object" name="action_confirm" class="oe_highlight" states="accept"/>
+                    <button string="Cancel" type="object" name="action_cancel" class="oe_highlight" states="draft,sent,confirmed"/>
+                </header>
+                   
+                <sheet>
+                    <group>
+                        <field name="name" attrs="{'readonly': [('state', 'not in', ['draft', 'sent'])]}"/>
+                        <field name="salesman_id" attrs="{'readonly': [('state', 'not in', ['draft', 'sent'])]}"/>
+                        <field name="partner_id" attrs="{'readonly': [('state', 'not in', ['draft', 'sent'])]}"/>
+                        <field name="pricelist_id" attrs="{'readonly': [('state', 'not in', ['draft', 'sent'])]}"/>
+                        <field name="external_link" attrs="{'readonly': [('state', 'not in', ['draft', 'sent'])]}"/>
+                    </group>
+                    <notebook>
+                        <page string="Proposal Lines">
+                            <field name="proposal_line_ids" attrs="{'readonly': [('state', 'not in', ['draft', 'sent'])]}">
+                                <tree editable="bottom">
+                                    <field name="product_id"/>
+                                    <field name="label"/>
+                                    <field name="qty_proposed"/>
+                                    <field name="qty_accepted"/>
+                                    <field name="price_proposed"/>
+                                    <field name="price_accepted"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                    <div class="oe_chatter">
+                         <div class="oe_followers">
+                                    <field name="message_follower_ids" widget="mail_followers"/>
+                            </div>
+                                <div class="oe_mail_thread">
+                                    <field name="message_ids" widget="mail_thread"/>
+                                </div>
+                        </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+        <record id="record_praposal_view_tree" model="ir.ui.view">
+        <field name="name">business.proposal.tree</field>
+        <field name="model">business.proposal</field>
+        <field name="arch" type="xml">
+            <tree>
+                    <field name="name"/>
+                    <field name="salesman_id"/>
+                    <field name="partner_id"/>
+                    <field name="pricelist_id"/>
+                    <field name="external_link"/>
+            </tree>
+        </field>
+    </record>
+    <record id="action_praposal_report" model="ir.actions.act_window">
+        <field name="name">Praposal</field>
+        <field name="res_model">business.proposal</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Generate Praposals
+            </p>
+        </field>
+    </record>
+    <menuitem id="menu_praposal_details_main"
+         name="Praposal"
+         sequence="0"/>
+         <menuitem id="menu_praposal_details_sub_main"
+         name="Praposal"
+         parent="menu_praposal_details_main"
+         action="action_praposal_report"
+         sequence="0"/>
+</odoo>

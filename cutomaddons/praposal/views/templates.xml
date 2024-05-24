@@ -1,0 +1,71 @@
+<odoo>
+    <template id="proposal_page" name="Proposal Page" inherit_id="website.layout">
+        <xpath expr="//main" position="inside">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-8">
+                        <h1>PROPOSAL <span t-esc="proposal.name"/></h1>
+                        <p>Proposal Date: <span t-esc="proposal.create_date"/></p>
+                        <h3>Customer</h3>
+                        <p><span t-esc="proposal.partner_id.name"/></p>
+                        <p><span t-esc="proposal.partner_id.contact_address"/></p>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Proposed Quantity</th>
+                                    <th>Proposed Price</th>
+                                    <th>Accepted Quantity</th>
+                                    <th>Accepted Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="proposal.proposal_line_ids" t-as="line">
+                                    <tr>
+                                        <td>
+                                            <img t-att-src="'/web/image/product.product/%s/image_1920' % line.product_id.id" alt="Product Image" class="img-thumbnail" width="50" height="50"/>
+                                            <span t-esc="line.label"/>
+                                        </td>
+                                        <td><span t-esc="line.qty_proposed"/></td>
+                                        <td><span t-esc="line.price_proposed"/> €</td>
+                                        <td>
+                                            <input type="number" t-att-id="'qty_accepted_' + str(line.id)" t-att-value="line.qty_accepted"/>
+                                        </td>
+                                        <td>
+                                            <input type="number" t-att-id="'price_accepted_' + str(line.id)" t-att-value="line.price_accepted"/> €
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                        <div>
+                            <button t-att-data-id="proposal.id" t-att-data-token="proposal.external_link.split('=')[-1]" class="btn btn-success" id="accept_proposal">Accept</button>
+                            <button t-att-data-id="proposal.id" t-att-data-token="proposal.external_link.split('=')[-1]" class="btn btn-danger" id="refuse_proposal">Refuse</button>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div>
+                            <h3>Total</h3>
+                            <p>Subtotal: <span id="subtotal" /> ₹</p>
+                            <p>IGST: <span id="igst">0.00</span> ₹</p>
+                            <p>CGST: <span id="cgst">0.00</span> ₹</p>
+                            <h4>Total: <span id="total" /> ₹</h4>
+                        </div>
+                        <div>
+                            <h3>History</h3>
+                            <div class="oe_chatter">
+                                <div class="oe_followers">
+                                    <field name="message_follower_ids" widget="mail_followers"/>
+                                </div>
+                                <div class="oe_mail_thread">
+                                    <field name="message_ids" widget="mail_thread"/>
+                                </div>
+                            </div>
+                            <div t-field="proposal.message_ids"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+</odoo>
